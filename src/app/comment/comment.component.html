@@ -1,0 +1,60 @@
+<li class="comment"> 
+  <div class="comment__body">
+    <div class="comment__name-date">
+      <p class="comment__name">{{comment.author_name}}</p>
+      <p class="comment__date">{{comment.datetime | date: "dd/MM/yyyy HH:mm"}}</p>
+    </div>
+    <p class="comment__text">{{comment.body}}</p>
+    <button 
+      [disabled]="answer" 
+      class="button comment__answer-button"
+      (click)="answerOnComment()"
+    >
+      Ответить
+    </button>
+    <button
+      type="button"
+      *ngIf="comment.comments.length !== 0" 
+      class="comment__open"
+      (click)="toggleComments()"
+    >
+      {{visible ? "Скрыть комментарии" : "Показать комментарии"}}
+    </button>
+    <form 
+      *ngIf="answer"
+      #formAnswer="ngForm" 
+      class="comment__answer" 
+      (ngSubmit)="sendAnswer(formAnswer)"
+    >
+      <input 
+        class="comment__answer-input" 
+        name="answer" 
+        [(ngModel)]="textAnswer" 
+        required
+      >
+      <div class="comment__answer-buttons">
+        <button 
+          (click)="closeAnswerOnComment()" 
+          type="button" 
+          class="button comment__answer-close"
+        >
+          Закрыть
+        </button>
+        <button 
+          [disabled]="formAnswer.invalid" 
+          type="submit" 
+          class="button comment__answer-send"
+        >
+          Ответить
+        </button>
+      </div>
+    </form>
+  </div>
+  <ul 
+    class="comment__comments" 
+    [class.comment__comments_is-visible]="visible" 
+    *ngIf="comment.comments.length !== 0"
+  >
+    <app-comment *ngFor="let comment of comment.comments" [comment]="comment"></app-comment>
+  </ul>
+</li>
